@@ -1,0 +1,12 @@
+[Unit]
+Description=Update Engine
+
+[Service]
+Type=dbus
+BusName=com.coreos.update1
+ExecStart=/opt/bin/merit-update-engine -version-url=${version_url}
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
