@@ -1,0 +1,21 @@
+# Adapted from https://github.com/kinvolk/locksmith/blob/v0.6.2/systemd/locksmithd.service
+[Unit]
+Description=Cluster reboot manager
+After=update-engine.service
+ConditionVirtualization=!container
+# Remove this condition so the service starts on PXE booted hosts
+# ConditionPathExists=!/usr/.noupdate
+
+[Service]
+CPUShares=16
+MemoryLimit=32M
+PrivateDevices=true
+Environment=GOMAXPROCS=1
+EnvironmentFile=-/usr/share/flatcar/update.conf
+EnvironmentFile=-/etc/flatcar/update.conf
+ExecStart=/usr/lib/locksmith/locksmithd
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
