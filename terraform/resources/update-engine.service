@@ -4,7 +4,11 @@ Description=Update Engine
 [Service]
 Type=dbus
 BusName=com.coreos.update1
-ExecStart=/opt/bin/merit-update-engine -version-url=${version_url}
+ExecStart=/opt/bin/merit-update-engine \
+  -version-url=${version_url} \
+  -interval-initial=${interval_initial} \
+  -interval-periodic=${interval_periodic} \
+  -interval-fuzz=${interval_fuzz}
 Restart=always
 RestartSec=30
 

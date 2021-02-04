@@ -21,11 +21,6 @@ const (
 	dbusName      = "com.coreos.update1"
 	dbusPath      = "/com/coreos/update1"
 	dbusInterface = "com.coreos.update1.Manager"
-	// These interval values were taken from the original update_engine:
-	//   - https://github.com/kinvolk/update_engine/blob/v0.4.10/src/update_engine/update_check_scheduler.cc#L14-L20
-	intervalInitial  = 7 * time.Minute
-	intervalPeriodic = 45 * time.Minute
-	intervalFuzz     = 10 * time.Minute
 	// This file should always exist on Flatcar
 	osReleasePath = "/etc/os-release"
 )
@@ -41,24 +36,31 @@ type dbusConn interface {
 // out in tests.
 type newVersionFunc func(versionURL string) (string, error)
 
+type updateEngineConfig struct {
+	intervalInitial  time.Duration
+	intervalPeriodic time.Duration
+	intervalFuzz     time.Duration
+	versionURL       string
+}
+
 type updateEngine struct {
+	updateEngineConfig
+
 	conn       dbusConn
 	newVersion newVersionFunc
 	osVersion  string
 	random     *rand.Rand
 	status     *status
 	updateCh   chan bool
-	versionURL *url.URL
 }
 
-func newUpdateEngine(versionURL string) (*updateEngine, error) {
+func newUpdateEngine(config updateEngineConfig) (*updateEngine, error) {
 	ov, err := osVersion()
 	if err != nil {
 		return nil, err
 	}
 
-	vu, err := url.Parse(versionURL)
-	if err != nil {
+	if _, err := url.Parse(config.versionURL); err != nil {
 		return nil, err
 	}
 
@@ -79,13 +81,13 @@ func newUpdateEngine(versionURL string) (*updateEngine, error) {
 	ch := make(chan bool)
 
 	ue := &updateEngine{
-		conn:       conn,
-		newVersion: newVersion,
-		osVersion:  ov,
-		random:     r,
-		status:     newStatus(),
-		updateCh:   ch,
-		versionURL: vu,
+		conn:               conn,
+		newVersion:         newVersion,
+		osVersion:          ov,
+		random:             r,
+		status:             newStatus(),
+		updateCh:           ch,
+		updateEngineConfig: config,
 	}
 
 	conn.Export(ue, dbusPath, dbusInterface)
@@ -117,9 +119,8 @@ func (ue *updateEngine) AttemptUpdate() *dbus.Error {
 }
 
 func (ue *updateEngine) checkForUpdate() error {
-	vu := ue.versionURL.String()
-	log.Printf("Checking for new version at %s", vu)
-	nv, err := ue.newVersion(vu)
+	log.Printf("Checking for new version at %s", ue.versionURL)
+	nv, err := ue.newVersion(ue.versionURL)
 	if err != nil {
 		return err
 	}
@@ -155,7 +156,7 @@ func (ue *updateEngine) checkForUpdate() error {
 
 func (ue *updateEngine) run() {
 	// Wait for a short time before performing the first status check
-	id := fuzzDuration(ue.random, intervalInitial, intervalFuzz)
+	id := fuzzDuration(ue.random, ue.intervalInitial, ue.intervalFuzz)
 
 	ticker := time.NewTicker(id)
 	defer ticker.Stop()
@@ -167,7 +168,7 @@ func (ue *updateEngine) run() {
 			log.Printf("Error checking for update: %s", err)
 		}
 		// Wait for a longer period between updates
-		d := fuzzDuration(ue.random, intervalPeriodic, intervalFuzz)
+		d := fuzzDuration(ue.random, ue.intervalPeriodic, ue.intervalFuzz)
 		log.Printf("Waiting %s before next update check", d)
 		ticker.Reset(d)
 	}

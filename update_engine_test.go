@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/url"
 	"testing"
 	"time"
 
@@ -50,8 +49,6 @@ func TestUpdateEngineAttemptUpdate(t *testing.T) {
 }
 
 func TestUpdateEngineCheckForUpdate(t *testing.T) {
-	versionURL, _ := url.Parse(defaultVersionURL)
-
 	s := newStatus()
 
 	d := &dbusConnRecorder{}
@@ -61,7 +58,6 @@ func TestUpdateEngineCheckForUpdate(t *testing.T) {
 		status:     s,
 		osVersion:  "2605.11.0",
 		newVersion: mockNewVersionFuncFactory("2605.11.0"),
-		versionURL: versionURL,
 	}
 
 	// The os version and new version match so there shouldn't be any update
