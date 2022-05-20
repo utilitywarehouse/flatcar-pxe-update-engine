@@ -1,14 +1,14 @@
-data "ignition_file" "merit_update_engine" {
+data "ignition_file" "pxe_update_engine" {
   mode       = 493
   filesystem = "root"
-  path       = "/opt/bin/merit-update-engine"
+  path       = "/opt/bin/pxe-update-engine"
 
   source {
-    source = "https://github.com/utilitywarehouse/flatcar-merit-update-engine/releases/download/${var.release_version}/flatcar-merit-update-engine_${var.release_version}_linux_amd64"
+    source = "https://github.com/utilitywarehouse/flatcar-pxe-update-engine/releases/download/${var.release_version}/flatcar-pxe-update-engine_${var.release_version}_linux_amd64"
   }
 }
 
-data "ignition_systemd_unit" "merit_update_engine" {
+data "ignition_systemd_unit" "pxe_update_engine" {
   name = "update-engine.service"
   content = templatefile("${path.module}/resources/update-engine.service",
     {

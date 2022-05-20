@@ -1,4 +1,4 @@
-module github.com/utilitywarehouse/flatcar-merit-update-engine
+module github.com/utilitywarehouse/flatcar-pxe-update-engine
 
 go 1.18
 

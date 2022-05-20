@@ -1,4 +1,4 @@
-# flatcar-merit-update-engine
+# flatcar-pxe-update-engine
 
 Substitute for the [Flatcar
 update_engine](https://github.com/kinvolk/update_engine) that enables automated
@@ -24,5 +24,5 @@ works seamlessly with the `update_engine_client` and reboot orchestrators like
 ## Deploy
 
 See [terraform/](terraform/) for a Terraform module that provides ignition
-config for running the merit update engine as a systemd service. Refer to the
+config for running the flatcar-pxe-update-engine as a systemd service. Refer to the
 [README](terraform/README.md) for instructions.
