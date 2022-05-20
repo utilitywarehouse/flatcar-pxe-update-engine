@@ -4,7 +4,7 @@ data "ignition_file" "pxe_update_engine" {
   path       = "/opt/bin/pxe-update-engine"
 
   source {
-    source = "https://github.com/utilitywarehouse/flatcar-pxe-update-engine/releases/download/${var.release_version}/flatcar-pxe-update-engine_${var.release_version}_linux_amd64"
+    source = "https://github.com/utilitywarehouse/flatcar-pxe-update-engine/releases/download/${var.release_version}/flatcar-pxe-update-engine_${local.vless_release_version}_linux_amd64"
   }
 }
 
