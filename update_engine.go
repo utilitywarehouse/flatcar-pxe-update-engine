@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"time"
 
@@ -28,6 +29,12 @@ const (
 	intervalFuzz     = 10 * time.Minute
 	// This file should always exist on Flatcar
 	osReleasePath = "/etc/os-release"
+)
+
+var (
+	// Flag file location for kured:
+	// https://github.com/flatcar-linux/update_engine/commit/93f6cdddd46e9fba6c336c1db3baa6c89d85979b
+	kuredReleasePath = "/run/reboot-required"
 )
 
 // dbusConn is an interface for all the methods of *dbus.Conn that the
@@ -143,6 +150,9 @@ func (ue *updateEngine) checkForUpdate() error {
 			return err
 		}
 
+		if err := touchFile(kuredReleasePath); err != nil {
+			return err
+		}
 		log.Printf("Updated status: %s\n", ue.status)
 
 		return nil
@@ -225,6 +235,24 @@ func getValue(match, body string) (string, error) {
 	}
 
 	return "", fmt.Errorf("couldn't get value for %s", match)
+}
+
+func touchFile(fileName string) error {
+	_, err := os.Stat(fileName)
+	if os.IsNotExist(err) {
+		file, err := os.Create(fileName)
+		defer file.Close()
+		if err != nil {
+			return err
+		}
+	} else {
+		currentTime := time.Now().Local()
+		err = os.Chtimes(fileName, currentTime, currentTime)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // fuzzDuration adds a random jitter to a given duration. It's adapted from the
