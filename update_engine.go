@@ -29,6 +29,9 @@ const (
 	intervalFuzz     = 10 * time.Minute
 	// This file should always exist on Flatcar
 	osReleasePath = "/etc/os-release"
+)
+
+var (
 	// Flag file location for kured:
 	// https://github.com/flatcar-linux/update_engine/commit/93f6cdddd46e9fba6c336c1db3baa6c89d85979b
 	kuredReleasePath = "/run/reboot-required"

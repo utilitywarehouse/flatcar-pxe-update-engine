@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"net/url"
+	"os"
 	"testing"
 	"time"
 
@@ -56,6 +58,9 @@ func TestUpdateEngineCheckForUpdate(t *testing.T) {
 
 	d := &dbusConnRecorder{}
 
+	// Test path for the kured release loaction
+	kuredReleasePath = fmt.Sprintf("%s/reboot-required", t.TempDir())
+
 	ue := updateEngine{
 		conn:       d,
 		status:     s,
@@ -84,6 +89,10 @@ func TestUpdateEngineCheckForUpdate(t *testing.T) {
 	assert.Equal(t, d.Values[3], "2605.12.0")
 	assert.Equal(t, ue.status.currentOperation, updateStatusUpdatedNeedReboot)
 	assert.Equal(t, ue.status.newVersion, "2605.12.0")
+	// Check that we have the flag file for kured
+	if _, err := os.Stat(kuredReleasePath); os.IsNotExist(err) {
+		t.Fatal("Missing release flag file for kured")
+	}
 }
 
 func TestUpdateEngineResetStatus(t *testing.T) {
