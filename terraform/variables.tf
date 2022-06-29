@@ -1,5 +1,5 @@
 variable "release_version" {
-  default = "v1.1.0-RC1"
+  default = "v1.1.0"
 }
 
 variable "version_url" {
