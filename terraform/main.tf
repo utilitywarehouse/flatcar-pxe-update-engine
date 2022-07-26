@@ -1,6 +1,5 @@
 data "ignition_file" "pxe_update_engine" {
   mode       = 493
-  filesystem = "root"
   path       = "/opt/bin/pxe-update-engine"
 
   source {
