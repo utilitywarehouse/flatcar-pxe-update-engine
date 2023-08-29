@@ -33,8 +33,8 @@ const (
 
 var (
 	// Flag file location for kured:
-	// https://github.com/flatcar-linux/update_engine/commit/93f6cdddd46e9fba6c336c1db3baa6c89d85979b
-	kuredReleasePath = "/run/reboot-required"
+	// https://kured.dev/docs/configuration/#reboot-sentinel-file--period
+	kuredReleasePath = "/var/run/reboot-required"
 )
 
 // dbusConn is an interface for all the methods of *dbus.Conn that the
@@ -257,7 +257,7 @@ func touchFile(fileName string) error {
 
 // fuzzDuration adds a random jitter to a given duration. It's adapted from the
 // equivalent method in the original update_engine:
-//  - https://github.com/kinvolk/update_engine/blob/v0.4.10/src/update_engine/utils.cc#L510-L515
+//   - https://github.com/kinvolk/update_engine/blob/v0.4.10/src/update_engine/utils.cc#L510-L515
 func fuzzDuration(r *rand.Rand, value time.Duration, fuzz time.Duration) time.Duration {
 	min := int64(value.Nanoseconds() - (fuzz.Nanoseconds() / 2))
 	max := int64(value.Nanoseconds() + (fuzz.Nanoseconds() / 2))

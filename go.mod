@@ -1,6 +1,6 @@
 module github.com/utilitywarehouse/flatcar-pxe-update-engine
 
-go 1.20
+go 1.21
 
 require (
 	github.com/godbus/dbus/v5 v5.1.0
