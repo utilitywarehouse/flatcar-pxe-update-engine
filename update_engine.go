@@ -33,8 +33,9 @@ const (
 
 var (
 	// Flag file location for kured:
-	// https://kured.dev/docs/configuration/#reboot-sentinel-file--period
-	kuredReleasePath = "/var/run/reboot-required"
+	// https://github.com/flatcar-linux/update_engine/commit/93f6cdddd46e9fba6c336c1db3baa6c89d85979b
+	// https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch05s13.html
+	kuredReleasePath = "/run/reboot-required"
 )
 
 // dbusConn is an interface for all the methods of *dbus.Conn that the
