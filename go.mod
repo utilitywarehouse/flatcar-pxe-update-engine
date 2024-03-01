@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/godbus/dbus/v5 v5.1.0
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 )
 
 require (
