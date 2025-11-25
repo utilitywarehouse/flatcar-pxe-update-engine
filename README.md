@@ -19,7 +19,7 @@ version.
 It implements the same DBus interface as the original `update_engine`, so it
 works seamlessly with the `update_engine_client` and reboot orchestrators like
 [locksmithd](https://github.com/kinvolk/locksmithd) and
-[flatcar-linux-update-operator]((https://github.com/kinvolk/flatcar-linux-update-operator).
+[flatcar-linux-update-operator](https://github.com/kinvolk/flatcar-linux-update-operator).
 
 ## Deploy
 
