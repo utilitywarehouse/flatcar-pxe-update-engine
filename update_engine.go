@@ -231,7 +231,7 @@ func getValue(match, body string) (string, error) {
 		}
 
 		if spl[0] == match {
-			return spl[1], nil
+			return strings.Trim(spl[1], `"'`), nil
 		}
 	}
 
