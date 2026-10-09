@@ -111,6 +111,25 @@ func TestUpdateEngineResetStatus(t *testing.T) {
 	assert.Equal(t, ue.status, newStatus())
 }
 
+func TestGetValue(t *testing.T) {
+	body := "ID=flatcar\nVERSION=\"4757.2.1\"\nVERSION_ID='4757.2.1'\nFLATCAR_VERSION=4757.2.1\n"
+
+	v, err := getValue("VERSION", body)
+	assert.Nil(t, err)
+	assert.Equal(t, "4757.2.1", v)
+
+	v, err = getValue("VERSION_ID", body)
+	assert.Nil(t, err)
+	assert.Equal(t, "4757.2.1", v)
+
+	v, err = getValue("FLATCAR_VERSION", body)
+	assert.Nil(t, err)
+	assert.Equal(t, "4757.2.1", v)
+
+	_, err = getValue("MISSING", body)
+	assert.NotNil(t, err)
+}
+
 func TestUpdateEngineGetStatus(t *testing.T) {
 	s := &status{
 		lastCheckedTime:  12345,
