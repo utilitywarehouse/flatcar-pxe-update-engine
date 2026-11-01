@@ -3,7 +3,7 @@ module github.com/utilitywarehouse/flatcar-pxe-update-engine
 go 1.21
 
 require (
-	github.com/godbus/dbus/v5 v5.2.2
+	github.com/godbus/dbus/v5 v5.2.4
 	github.com/stretchr/testify v1.12.1
 )
 
